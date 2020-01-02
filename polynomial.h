@@ -201,6 +201,13 @@ namespace polynomial {
             }
         }
 
+        Polynomial get_major() const {
+            if (is_zero()) {
+                return Polynomial();
+            }
+            return {*monomials.rbegin()};
+        }
+
         Polynomial& operator=(Polynomial copy) {
             monomials = copy.monomials;
             return (*this);
