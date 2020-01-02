@@ -104,6 +104,38 @@ namespace polynomial {
             return *this;
         }
 
+        Polynomial operator*(const Monomial<size>& monomial) const {
+            std::map<Monomial<size>, Field, Compare> result;
+            for (const auto& element : monomials) {
+                result[element.first * monomial] = element.second;
+            }
+            return Polynomial<size, Field, Compare>(std::move(result));
+        }
+
+        Polynomial operator*=(const Monomial<size>& monomial) {
+            *this = *this * monomial;
+            return *this;
+        }
+
+        Polynomial operator*(const Polynomial& other) const {
+            std::map<Monomial<size>, Field, Compare> result;
+            for (const auto& first_monomial : monomials) {
+                for (const auto& second_monomial : other.monomials) {
+                    const auto multiply = first_monomial.first * second_monomial.first;
+                    result[multiply] += first_monomial.second * second_monomial.second;
+                    if (result[multiply] == 0) {
+                        result.erase(multiply);
+                    }
+                }
+            }
+            return Polynomial<size, Field, Compare>(std::move(result));
+        }
+
+        Polynomial operator*=(const Polynomial& other) {
+            *this = *this * other;
+            return *this;
+        }
+
         friend std::ostream& operator<<(std::ostream &out, const Polynomial &element) {
             uint32_t monomials_count = element.monomials.size();
             for (const auto& monomial : element.monomials) {
