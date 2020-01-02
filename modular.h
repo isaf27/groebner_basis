@@ -65,6 +65,7 @@ namespace math {
 
         Modular& operator=(Modular copy) {
             value = copy.value;
+            return (*this);
         }
 
         Modular(const Modular &copy) : value(copy.value) {
