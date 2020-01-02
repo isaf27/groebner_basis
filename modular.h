@@ -42,12 +42,22 @@ namespace math {
             }
         }
 
+        Modular operator+=(const Modular& other) {
+            *this = *this + other;
+            return *this;
+        }
+
         Modular operator-(const Modular& other) const {
             if (value >= other.value) {
                 return Modular<modulo>(value - other.value);
             } else {
                 return Modular<modulo>(value + modulo - other.value);
             }
+        }
+
+        Modular operator-=(const Modular& other) {
+            *this = *this - other;
+            return *this;
         }
 
         Modular operator*(const Modular& other) const {
@@ -59,8 +69,16 @@ namespace math {
         }
 
         friend std::ostream& operator<<(std::ostream &out, const Modular &element) {
-            out << element.value << " (modulo " << modulo << ")";
+            out << "[" << element.value << " (modulo " << modulo << ")]";
             return out;
+        }
+
+        bool is_zero() const {
+            return value == 0;
+        }
+
+        bool is_one() const {
+            return value == 1;
         }
 
         Modular& operator=(Modular copy) {
