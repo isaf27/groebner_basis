@@ -73,7 +73,7 @@ namespace math {
             return (*this) * other.inverse();
         }
 
-        Modular operator/=(const Modular& other) const {
+        Modular operator/=(const Modular& other) {
             *this = *this / other;
             return *this;
         }

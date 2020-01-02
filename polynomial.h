@@ -104,6 +104,23 @@ namespace polynomial {
             return *this;
         }
 
+        Polynomial operator/(const Field& coefficient) const {
+            assert(((void)"divizion by zero", !coefficient.is_zero()));
+            std::map<Monomial<size>, Field, Compare> result = monomials;
+            for (const auto& monomial : monomials) {
+                result[monomial.first] /= coefficient;
+            }
+            return Polynomial<size, Field, Compare>(std::move(result));
+        }
+
+        Polynomial operator/=(const Field& coefficient) {
+            assert(((void)"divizion by zero", !coefficient.is_zero()));
+            for (const auto& monomial : monomials) {
+                monomials[monomial.first] /= coefficient;
+            }
+            return *this;
+        }
+
         Polynomial operator*(const Monomial<size>& monomial) const {
             std::map<Monomial<size>, Field, Compare> result;
             for (const auto& element : monomials) {
@@ -169,6 +186,14 @@ namespace polynomial {
                 return Monomial<size>();
             } else {
                 return monomials.rbegin()->first;
+            }
+        }
+
+        Field get_major_coefficient() const {
+            if (is_zero()) {
+                return 0;
+            } else {
+                return monomials.rbegin()->second;
             }
         }
 
