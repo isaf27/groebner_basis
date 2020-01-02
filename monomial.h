@@ -1,4 +1,5 @@
 #include <cassert>
+#include <algorithm>
 #include <vector>
 #include <iostream>
 
@@ -96,4 +97,13 @@ namespace polynomial {
         Monomial(const Monomial &copy) : degree(copy.degree) {
         }
     };
+
+    template<uint32_t size>
+    Monomial<size> get_intersection(const Monomial<size>& first, const Monomial<size>& second) {
+        std::vector<uint32_t> degree(size);
+        for (uint32_t i = 0; i < size; ++i) {
+            degree[i] = std::min(first.get_degree(i), second.get_degree(i));
+        }
+        return Monomial<size>(degree);
+    }
 }

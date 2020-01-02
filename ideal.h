@@ -21,6 +21,13 @@ namespace polynomial {
             }
         }
 
+        void add(const Polynomial<size, Field, Compare>& polynomial) {
+            if (!polynomial.is_zero()) {
+                polynomials.push_back(polynomial);
+                polynomials.back() /= polynomials.back().get_major_coefficient();
+            }
+        }
+
         void reduce(Polynomial<size, Field, Compare>& polynomial) {
             while (!polynomial.is_zero()) {
                 const auto& major_monomial = polynomial.get_major_monomial();
@@ -34,6 +41,24 @@ namespace polynomial {
                 }
                 if (!was_reduced) {
                     break;
+                }
+            }
+        }
+
+        void make_groebner_basis() {
+            for (uint32_t i = 0; i < polynomials.size(); ++i) {
+                for (uint32_t j = 0; j < i; ++j) {
+                    const auto& intersection = get_intersection(
+                        polynomials[i].get_major_monomial(),
+                        polynomials[j].get_major_monomial()
+                    );
+                    if (intersection.is_empty()) {
+                        continue;
+                    }
+                    auto s_polynomial = polynomials[i] * (polynomials[j].get_major_monomial() / intersection);
+                    s_polynomial -= polynomials[j] * (polynomials[i].get_major_monomial() / intersection);
+                    this->reduce(s_polynomial);
+                    this->add(s_polynomial);
                 }
             }
         }
