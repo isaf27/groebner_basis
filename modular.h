@@ -64,8 +64,18 @@ namespace math {
             return Modular<modulo>((uint64_t)value * (uint64_t)other.value % (uint64_t)modulo);
         }
 
+        Modular operator*=(const Modular& other) {
+            *this = *this * other;
+            return *this;
+        }
+
         Modular operator/(const Modular& other) const {
             return (*this) * other.inverse();
+        }
+
+        Modular operator/=(const Modular& other) const {
+            *this = *this / other;
+            return *this;
         }
 
         friend std::ostream& operator<<(std::ostream &out, const Modular &element) {
