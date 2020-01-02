@@ -34,6 +34,10 @@ namespace math {
             return value == other.value;
         }
 
+        bool operator!=(const Modular& other) const {
+            return value == other.value;
+        }
+
         Modular operator+(const Modular& other) const {
             if (value + other.value >= modulo) {
                 return Modular<modulo>(value + other.value - modulo);

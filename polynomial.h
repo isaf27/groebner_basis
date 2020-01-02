@@ -40,6 +40,10 @@ namespace polynomial {
             return monomials == other.monomials;
         }
 
+        bool operator!=(const Polynomial& other) const {
+            return monomials != other.monomials;
+        }
+
         Polynomial operator+(const Polynomial& other) const {
             std::map<Monomial<size>, Field, Compare> result = monomials;
             for (const auto& monomial : other.monomials) {

@@ -38,6 +38,10 @@ namespace polynomial {
             return degree == other.degree;
         }
 
+        bool operator!=(const Monomial& other) const {
+            return degree != other.degree;
+        }
+
         bool operator<(const Monomial& other) const {
             return degree < other.degree;
         }
