@@ -12,7 +12,12 @@ namespace polynomial {
         Ideal() : polynomials({}) {
         }
 
-        Ideal(const std::vector<Polynomial<size, Field, Compare>>& polynomials) : polynomials(polynomials) {
+        Ideal(const std::vector<Polynomial<size, Field, Compare>>& elements) {
+            for (const auto& polynomial : elements) {
+                if (!polynomial.is_zero()) {
+                    polynomials.push_back(polynomial);
+                }
+            }
         }
 
         friend std::ostream& operator<<(std::ostream &out, const Ideal &ideal) {

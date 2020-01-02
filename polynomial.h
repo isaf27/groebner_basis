@@ -160,8 +160,12 @@ namespace polynomial {
             return out;
         }
 
+        bool is_zero() const {
+            return monomials.empty();
+        }
+
         Monomial<size> get_major_monomial() const {
-            if (monomials.empty()) {
+            if (is_zero()) {
                 return Monomial<size>();
             } else {
                 return monomials.rbegin()->first;
