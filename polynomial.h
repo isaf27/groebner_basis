@@ -157,6 +157,16 @@ namespace polynomial {
             return *this;
         }
 
+        void reduce(Polynomial& polynomial) {
+            while (!polynomial.is_zero()) {
+                const auto& major_monomial = polynomial.get_major_monomial();
+                if (!major_monomial.is_subset(get_major_monomial())) {
+                    break;
+                }
+                polynomial -= (*this) * (major_monomial / get_major_monomial()) * get_major_coefficient();
+            }
+        }
+
         friend std::ostream& operator<<(std::ostream &out, const Polynomial &element) {
             uint32_t monomials_count = element.monomials.size();
             for (const auto& monomial : element.monomials) {
