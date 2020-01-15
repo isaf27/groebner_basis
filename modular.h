@@ -6,10 +6,13 @@
 
 namespace math {
 
-    template <uint32_t modulo>
+    using ModularValueType = uint32_t;
+    using ModularValueType64 = uint64_t;
+
+    template <ModularValueType modulo>
     class Modular {
     public:
-        Modular(uint32_t value = 0) : value_(value) {
+        Modular(ModularValueType value = 0) : value_(value) {
             assert(((void)"value should be less than modulo", value < modulo));
         }
 
@@ -48,7 +51,11 @@ namespace math {
         }
 
         Modular operator*(const Modular& other) const {
-            return Modular<modulo>((uint64_t)value_ * (uint64_t)other.value_ % (uint64_t)modulo);
+            return Modular<modulo>(
+                static_cast<ModularValueType64>(value_) *
+                static_cast<ModularValueType64>(other.value_) %
+                static_cast<ModularValueType64>(modulo)
+            );
         }
 
         Modular operator*=(const Modular& other) {
@@ -87,7 +94,7 @@ namespace math {
         }
 
     private:
-        Modular power(uint32_t degree) const {
+        Modular power(ModularValueType degree) const {
             if (degree == 0) {
                 return Modular<modulo>(1);
             }
@@ -104,7 +111,7 @@ namespace math {
             return this->power(modulo - 2);
         }
 
-        uint32_t value_;
+        ModularValueType value_;
     };
 }
 
