@@ -130,7 +130,7 @@ namespace polynomial {
 
         Ideal& operator=(Ideal copy) {
             polynomials_ = copy.polynomials_;
-            return (*this);
+            return *this;
         }
 
         Ideal(const Ideal &copy) : polynomials_(copy.polynomials_) {

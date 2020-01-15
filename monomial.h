@@ -95,7 +95,7 @@ namespace polynomial {
 
         Monomial& operator=(Monomial copy) {
             degree_ = copy.degree_;
-            return (*this);
+            return *this;
         }
 
         Monomial(const Monomial &copy) : degree_(copy.degree_) {

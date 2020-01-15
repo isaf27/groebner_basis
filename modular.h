@@ -57,7 +57,7 @@ namespace math {
         }
 
         Modular operator/(const Modular& other) const {
-            return (*this) * other.inverse();
+            return *this * other.inverse();
         }
 
         Modular operator/=(const Modular& other) {
@@ -80,7 +80,7 @@ namespace math {
 
         Modular& operator=(Modular copy) {
             value_ = copy.value_;
-            return (*this);
+            return *this;
         }
 
         Modular(const Modular &copy) : value_(copy.value_) {
@@ -95,7 +95,7 @@ namespace math {
             if (degree % 2 == 0) {
                 return subpower * subpower;
             } else {
-                return subpower * subpower * (*this);
+                return subpower * subpower * *this;
             }
         }
 

@@ -220,7 +220,7 @@ namespace polynomial {
 
         Polynomial& operator=(Polynomial copy) {
             terms_ = copy.terms_;
-            return (*this);
+            return *this;
         }
 
         Polynomial(const Polynomial &copy) : terms_(copy.terms_) {
