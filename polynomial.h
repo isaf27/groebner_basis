@@ -13,40 +13,40 @@ namespace polynomial {
     template<uint32_t size, class Field, class Compare = std::less<Monomial<size>>>
     class Polynomial {
     public:
-        Polynomial() : monomials({}) {
+        Polynomial() : terms_({}) {
         }
 
         Polynomial(const Monomial<size>& monomial, const Field& coefficient) {
             if (!coefficient.is_zero()) {
-                monomials[monomial] = coefficient;
+                terms_[monomial] = coefficient;
             }
         }
 
-        Polynomial(std::map<Monomial<size>, Field, Compare>&& monomials) : monomials(monomials) {
+        Polynomial(std::map<Monomial<size>, Field, Compare>&& monomials) : terms_(monomials) {
         }
 
         Polynomial(std::initializer_list<std::pair<Monomial<size>, Field>> elements) {
             for (const auto& element : elements) {
                 if (!element.second.is_zero()) {
-                    monomials[element.first] += element.second;
-                    if (monomials[element.first] == 0) {
-                        monomials.erase(element.first);
+                    terms_[element.first] += element.second;
+                    if (terms_[element.first] == 0) {
+                        terms_.erase(element.first);
                     }
                 }
             }
         }
 
         bool operator==(const Polynomial& other) const {
-            return monomials == other.monomials;
+            return terms_ == other.terms_;
         }
 
         bool operator!=(const Polynomial& other) const {
-            return monomials != other.monomials;
+            return terms_ != other.terms_;
         }
 
         Polynomial operator+(const Polynomial& other) const {
-            std::map<Monomial<size>, Field, Compare> result = monomials;
-            for (const auto& monomial : other.monomials) {
+            std::map<Monomial<size>, Field, Compare> result = terms_;
+            for (const auto& monomial : other.terms_) {
                 result[monomial.first] += monomial.second;
                 if (result[monomial.first] == 0) {
                     result.erase(monomial.first);
@@ -56,18 +56,18 @@ namespace polynomial {
         }
 
         Polynomial operator+=(const Polynomial& other) {
-            for (const auto& monomial : other.monomials) {
-                monomials[monomial.first] += monomial.second;
-                if (monomials[monomial.first] == 0) {
-                    monomials.erase(monomial.first);
+            for (const auto& monomial : other.terms_) {
+                terms_[monomial.first] += monomial.second;
+                if (terms_[monomial.first] == 0) {
+                    terms_.erase(monomial.first);
                 }
             }
             return *this;
         }
 
         Polynomial operator-(const Polynomial& other) const {
-            std::map<Monomial<size>, Field, Compare> result = monomials;
-            for (const auto& monomial : other.monomials) {
+            std::map<Monomial<size>, Field, Compare> result = terms_;
+            for (const auto& monomial : other.terms_) {
                 result[monomial.first] -= monomial.second;
                 if (result[monomial.first] == 0) {
                     result.erase(monomial.first);
@@ -77,10 +77,10 @@ namespace polynomial {
         }
 
         Polynomial operator-=(const Polynomial& other) {
-            for (const auto& monomial : other.monomials) {
-                monomials[monomial.first] -= monomial.second;
-                if (monomials[monomial.first] == 0) {
-                    monomials.erase(monomial.first);
+            for (const auto& monomial : other.terms_) {
+                terms_[monomial.first] -= monomial.second;
+                if (terms_[monomial.first] == 0) {
+                    terms_.erase(monomial.first);
                 }
             }
             return *this;
@@ -90,8 +90,8 @@ namespace polynomial {
             if (coefficient.is_zero()) {
                 return Polynomial<size, Field, Compare>();
             }
-            std::map<Monomial<size>, Field, Compare> result = monomials;
-            for (const auto& monomial : monomials) {
+            std::map<Monomial<size>, Field, Compare> result = terms_;
+            for (const auto& monomial : terms_) {
                 result[monomial.first] *= coefficient;
             }
             return Polynomial<size, Field, Compare>(std::move(result));
@@ -99,10 +99,10 @@ namespace polynomial {
 
         Polynomial operator*=(const Field& coefficient) {
             if (coefficient.is_zero()) {
-                monomials.clear();
+                terms_.clear();
             } else {
-                for (const auto& monomial : monomials) {
-                    monomials[monomial.first] *= coefficient;
+                for (const auto& monomial : terms_) {
+                    terms_[monomial.first] *= coefficient;
                 }
             }
             return *this;
@@ -110,8 +110,8 @@ namespace polynomial {
 
         Polynomial operator/(const Field& coefficient) const {
             assert(((void)"divizion by zero", !coefficient.is_zero()));
-            std::map<Monomial<size>, Field, Compare> result = monomials;
-            for (const auto& monomial : monomials) {
+            std::map<Monomial<size>, Field, Compare> result = terms_;
+            for (const auto& monomial : terms_) {
                 result[monomial.first] /= coefficient;
             }
             return Polynomial<size, Field, Compare>(std::move(result));
@@ -119,15 +119,15 @@ namespace polynomial {
 
         Polynomial operator/=(const Field& coefficient) {
             assert(((void)"divizion by zero", !coefficient.is_zero()));
-            for (const auto& monomial : monomials) {
-                monomials[monomial.first] /= coefficient;
+            for (const auto& monomial : terms_) {
+                terms_[monomial.first] /= coefficient;
             }
             return *this;
         }
 
         Polynomial operator*(const Monomial<size>& monomial) const {
             std::map<Monomial<size>, Field, Compare> result;
-            for (const auto& element : monomials) {
+            for (const auto& element : terms_) {
                 result[element.first * monomial] = element.second;
             }
             return Polynomial<size, Field, Compare>(std::move(result));
@@ -140,8 +140,8 @@ namespace polynomial {
 
         Polynomial operator*(const Polynomial& other) const {
             std::map<Monomial<size>, Field, Compare> result;
-            for (const auto& first_monomial : monomials) {
-                for (const auto& second_monomial : other.monomials) {
+            for (const auto& first_monomial : terms_) {
+                for (const auto& second_monomial : other.terms_) {
                     const auto multiply = first_monomial.first * second_monomial.first;
                     result[multiply] += first_monomial.second * second_monomial.second;
                     if (result[multiply] == 0) {
@@ -168,8 +168,8 @@ namespace polynomial {
         }
 
         friend std::ostream& operator<<(std::ostream &out, const Polynomial &element) {
-            uint32_t monomials_count = element.monomials.size();
-            for (const auto& monomial : element.monomials) {
+            uint32_t monomials_count = element.terms_.size();
+            for (const auto& monomial : element.terms_) {
                 monomials_count--;
                 if (monomial.first.is_empty() && monomial.second.is_one()) {
                     out << Field(1);
@@ -192,14 +192,14 @@ namespace polynomial {
         }
 
         bool is_zero() const {
-            return monomials.empty();
+            return terms_.empty();
         }
 
         Monomial<size> get_major_monomial() const {
             if (is_zero()) {
                 return Monomial<size>();
             } else {
-                return monomials.rbegin()->first;
+                return terms_.rbegin()->first;
             }
         }
 
@@ -207,7 +207,7 @@ namespace polynomial {
             if (is_zero()) {
                 return 0;
             } else {
-                return monomials.rbegin()->second;
+                return terms_.rbegin()->second;
             }
         }
 
@@ -215,19 +215,19 @@ namespace polynomial {
             if (is_zero()) {
                 return Polynomial();
             }
-            return {*monomials.rbegin()};
+            return {*terms_.rbegin()};
         }
 
         Polynomial& operator=(Polynomial copy) {
-            monomials = copy.monomials;
+            terms_ = copy.terms_;
             return (*this);
         }
 
-        Polynomial(const Polynomial &copy) : monomials(copy.monomials) {
+        Polynomial(const Polynomial &copy) : terms_(copy.terms_) {
         }
 
     private:
-        std::map<Monomial<size>, Field, Compare> monomials;
+        std::map<Monomial<size>, Field, Compare> terms_;
     };
 }
 

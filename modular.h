@@ -9,23 +9,23 @@ namespace math {
     template <uint32_t modulo>
     class Modular {
     public:
-        Modular(uint32_t value = 0) : value(value) {
+        Modular(uint32_t value = 0) : value_(value) {
             assert(((void)"value should be less than modulo", value < modulo));
         }
 
         bool operator==(const Modular& other) const {
-            return value == other.value;
+            return value_ == other.value_;
         }
 
         bool operator!=(const Modular& other) const {
-            return value != other.value;
+            return value_ != other.value_;
         }
 
         Modular operator+(const Modular& other) const {
-            if (value + other.value >= modulo) {
-                return Modular<modulo>(value + other.value - modulo);
+            if (value_ + other.value_ >= modulo) {
+                return Modular<modulo>(value_ + other.value_ - modulo);
             } else {
-                return Modular<modulo>(value + other.value);
+                return Modular<modulo>(value_ + other.value_);
             }
         }
 
@@ -35,10 +35,10 @@ namespace math {
         }
 
         Modular operator-(const Modular& other) const {
-            if (value >= other.value) {
-                return Modular<modulo>(value - other.value);
+            if (value_ >= other.value_) {
+                return Modular<modulo>(value_ - other.value_);
             } else {
-                return Modular<modulo>(value + modulo - other.value);
+                return Modular<modulo>(value_ + modulo - other.value_);
             }
         }
 
@@ -48,7 +48,7 @@ namespace math {
         }
 
         Modular operator*(const Modular& other) const {
-            return Modular<modulo>((uint64_t)value * (uint64_t)other.value % (uint64_t)modulo);
+            return Modular<modulo>((uint64_t)value_ * (uint64_t)other.value_ % (uint64_t)modulo);
         }
 
         Modular operator*=(const Modular& other) {
@@ -66,24 +66,24 @@ namespace math {
         }
 
         friend std::ostream& operator<<(std::ostream &out, const Modular &element) {
-            out << "[" << element.value << " (modulo " << modulo << ")]";
+            out << "[" << element.value_ << " (modulo " << modulo << ")]";
             return out;
         }
 
         bool is_zero() const {
-            return value == 0;
+            return value_ == 0;
         }
 
         bool is_one() const {
-            return value == 1;
+            return value_ == 1;
         }
 
         Modular& operator=(Modular copy) {
-            value = copy.value;
+            value_ = copy.value_;
             return (*this);
         }
 
-        Modular(const Modular &copy) : value(copy.value) {
+        Modular(const Modular &copy) : value_(copy.value_) {
         }
 
     private:
@@ -100,11 +100,11 @@ namespace math {
         }
 
         Modular inverse() const {
-            assert(((void)"division by zero", value != 0));
+            assert(((void)"division by zero", value_ != 0));
             return this->power(modulo - 2);
         }
 
-        uint32_t value;
+        uint32_t value_;
     };
 }
 
