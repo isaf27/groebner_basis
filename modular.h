@@ -18,7 +18,7 @@ namespace math {
         }
 
         bool operator!=(const Modular& other) const {
-            return value_ != other.value_;
+            return !(*this == other);
         }
 
         Modular operator+(const Modular& other) const {

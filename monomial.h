@@ -39,7 +39,7 @@ namespace polynomial {
         }
 
         bool operator!=(const Monomial& other) const {
-            return degree_ != other.degree_;
+            return !(*this == other);
         }
 
         bool operator<(const Monomial& other) const {

@@ -41,7 +41,7 @@ namespace polynomial {
         }
 
         bool operator!=(const Polynomial& other) const {
-            return terms_ != other.terms_;
+            return !(*this == other);
         }
 
         Polynomial operator+(const Polynomial& other) const {
