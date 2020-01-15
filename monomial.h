@@ -1,3 +1,6 @@
+#ifndef GROEBNER_BASIS_MONOMIAL_H
+#define GROEBNER_BASIS_MONOMIAL_H
+
 #include <cassert>
 #include <algorithm>
 #include <vector>
@@ -111,3 +114,5 @@ namespace polynomial {
         return Monomial<size>(degree);
     }
 }
+
+#endif

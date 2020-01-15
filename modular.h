@@ -1,3 +1,6 @@
+#ifndef GROEBNER_BASIS_MODULAR_H
+#define GROEBNER_BASIS_MODULAR_H
+
 #include <cassert>
 #include <iostream>
 
@@ -104,3 +107,5 @@ namespace math {
         }
     };
 }
+
+#endif

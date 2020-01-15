@@ -1,3 +1,6 @@
+#ifndef GROEBNER_BASIS_POLYNOMIAL_H
+#define GROEBNER_BASIS_POLYNOMIAL_H
+
 #include "monomial.h"
 #include <functional>
 #include <map>
@@ -227,3 +230,5 @@ namespace polynomial {
         }
     };
 }
+
+#endif

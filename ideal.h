@@ -1,3 +1,6 @@
+#ifndef GROEBNER_BASIS_IDEAL_H
+#define GROEBNER_BASIS_IDEAL_H
+
 #include "polynomial.h"
 #include <vector>
 
@@ -137,3 +140,5 @@ namespace polynomial {
         }
     };
 }
+
+#endif
