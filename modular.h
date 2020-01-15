@@ -8,26 +8,6 @@ namespace math {
 
     template <uint32_t modulo>
     class Modular {
-    private:
-        uint32_t value;
-
-        Modular power(uint32_t degree) const {
-            if (degree == 0) {
-                return Modular<modulo>(1);
-            }
-            const auto subpower = this->power(degree / 2);
-            if (degree % 2 == 0) {
-                return subpower * subpower;
-            } else {
-                return subpower * subpower * (*this);
-            }
-        }
-
-        Modular inverse() const {
-            assert(((void)"division by zero", value != 0));
-            return this->power(modulo - 2);
-        }
-
     public:
         Modular(uint32_t value = 0) : value(value) {
             assert(((void)"value should be less than modulo", value < modulo));
@@ -105,6 +85,26 @@ namespace math {
 
         Modular(const Modular &copy) : value(copy.value) {
         }
+
+    private:
+        Modular power(uint32_t degree) const {
+            if (degree == 0) {
+                return Modular<modulo>(1);
+            }
+            const auto subpower = this->power(degree / 2);
+            if (degree % 2 == 0) {
+                return subpower * subpower;
+            } else {
+                return subpower * subpower * (*this);
+            }
+        }
+
+        Modular inverse() const {
+            assert(((void)"division by zero", value != 0));
+            return this->power(modulo - 2);
+        }
+
+        uint32_t value;
     };
 }
 

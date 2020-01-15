@@ -10,9 +10,6 @@ namespace polynomial {
 
     template<uint32_t size>
     class Monomial {
-    private:
-        std::vector<uint32_t> degree;
-
     public:
         Monomial() : degree(size, 0) {
         }
@@ -103,6 +100,9 @@ namespace polynomial {
 
         Monomial(const Monomial &copy) : degree(copy.degree) {
         }
+
+    private:
+        std::vector<uint32_t> degree;
     };
 
     template<uint32_t size>

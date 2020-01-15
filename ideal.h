@@ -8,9 +8,6 @@ namespace polynomial {
 
     template<uint32_t size, class Field, class Compare = std::less<Monomial<size>>>
     class Ideal {
-    private:
-        std::vector<Polynomial<size, Field, Compare>> polynomials;
-
     public:
         Ideal() : polynomials({}) {
         }
@@ -138,6 +135,9 @@ namespace polynomial {
 
         Ideal(const Ideal &copy) : polynomials(copy.polynomials) {
         }
+
+    private:
+        std::vector<Polynomial<size, Field, Compare>> polynomials;
     };
 }
 

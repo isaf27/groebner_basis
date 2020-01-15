@@ -12,9 +12,6 @@ namespace polynomial {
 
     template<uint32_t size, class Field, class Compare = std::less<Monomial<size>>>
     class Polynomial {
-    private:
-        std::map<Monomial<size>, Field, Compare> monomials;
-
     public:
         Polynomial() : monomials({}) {
         }
@@ -228,6 +225,9 @@ namespace polynomial {
 
         Polynomial(const Polynomial &copy) : monomials(copy.monomials) {
         }
+
+    private:
+        std::map<Monomial<size>, Field, Compare> monomials;
     };
 }
 
