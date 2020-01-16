@@ -16,59 +16,55 @@ namespace math {
             assert(((void)"value should be less than modulo", value < modulo));
         }
 
-        bool operator==(const Modular& other) const {
-            return value_ == other.value_;
+        friend bool operator==(const Modular& first, const Modular& second) {
+            return first.value_ == second.value_;
         }
 
-        bool operator!=(const Modular& other) const {
-            return !(*this == other);
+        friend bool operator!=(const Modular& first, const Modular& second) {
+            return !(first == second);
         }
 
-        Modular operator+(const Modular& other) const {
-            if (value_ + other.value_ >= modulo) {
-                return Modular<modulo>(value_ + other.value_ - modulo);
-            } else {
-                return Modular<modulo>(value_ + other.value_);
-            }
+        friend Modular operator+(const Modular& first, const Modular& second) {
+            return (first.value_ + second.value_) % modulo;
         }
 
         Modular operator+=(const Modular& other) {
-            *this = *this + other;
+            value_ = (value_ + other.value_) % modulo;
             return *this;
         }
 
-        Modular operator-(const Modular& other) const {
-            if (value_ >= other.value_) {
-                return Modular<modulo>(value_ - other.value_);
-            } else {
-                return Modular<modulo>(value_ + modulo - other.value_);
-            }
+        friend Modular operator-(const Modular& first, const Modular& second) {
+            return (first.value_ + modulo - second.value_) % modulo;
         }
 
         Modular operator-=(const Modular& other) {
-            *this = *this - other;
+            value_ = (value_ + modulo - other.value_) % modulo;
             return *this;
         }
 
-        Modular operator*(const Modular& other) const {
-            return Modular<modulo>(
-                static_cast<ModularValueType64>(value_) *
-                static_cast<ModularValueType64>(other.value_) %
+        friend Modular operator*(const Modular& first, const Modular& second) {
+            return (
+                static_cast<ModularValueType64>(first.value_) *
+                static_cast<ModularValueType64>(second.value_) %
                 static_cast<ModularValueType64>(modulo)
             );
         }
 
         Modular operator*=(const Modular& other) {
-            *this = *this * other;
+            value_ = (
+                static_cast<ModularValueType64>(value_) *
+                static_cast<ModularValueType64>(other.value_) %
+                static_cast<ModularValueType64>(modulo)
+            );
             return *this;
         }
 
-        Modular operator/(const Modular& other) const {
-            return *this * other.inverse();
+        friend Modular operator/(const Modular& first, const Modular& second) {
+            return first * second.inverse();
         }
 
         Modular operator/=(const Modular& other) {
-            *this = *this / other;
+            *this *= other.inverse();
             return *this;
         }
 
