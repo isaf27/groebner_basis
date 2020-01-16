@@ -13,8 +13,7 @@ namespace polynomial {
     template<uint32_t size, class Field, class Compare = std::less<Monomial<size>>>
     class Polynomial {
     public:
-        Polynomial() : terms_({}) {
-        }
+        Polynomial() = default;
 
         Polynomial(const Monomial<size>& monomial, const Field& coefficient) {
             if (!coefficient.is_zero()) {
@@ -22,7 +21,7 @@ namespace polynomial {
             }
         }
 
-        Polynomial(std::map<Monomial<size>, Field, Compare>&& monomials) : terms_(monomials) {
+        Polynomial(std::map<Monomial<size>, Field, Compare>&& terms) : terms_(terms) {
         }
 
         Polynomial(std::initializer_list<std::pair<Monomial<size>, Field>> elements) {
@@ -216,14 +215,6 @@ namespace polynomial {
                 return Polynomial();
             }
             return {*terms_.rbegin()};
-        }
-
-        Polynomial& operator=(Polynomial copy) {
-            terms_ = copy.terms_;
-            return *this;
-        }
-
-        Polynomial(const Polynomial &copy) : terms_(copy.terms_) {
         }
 
     private:

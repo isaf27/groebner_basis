@@ -95,14 +95,6 @@ namespace polynomial {
             return out;
         }
 
-        Monomial& operator=(Monomial copy) {
-            degree_ = copy.degree_;
-            return *this;
-        }
-
-        Monomial(const Monomial &copy) : degree_(copy.degree_) {
-        }
-
     private:
         std::vector<PolynomialDegreeType> degree_;
     };

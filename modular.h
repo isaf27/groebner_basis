@@ -85,14 +85,6 @@ namespace math {
             return value_ == 1;
         }
 
-        Modular& operator=(Modular copy) {
-            value_ = copy.value_;
-            return *this;
-        }
-
-        Modular(const Modular &copy) : value_(copy.value_) {
-        }
-
     private:
         Modular power(ModularValueType degree) const {
             if (degree == 0) {
