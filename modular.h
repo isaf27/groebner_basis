@@ -86,21 +86,18 @@ namespace math {
         }
 
     private:
-        Modular power(ModularValueType degree) const {
-            if (degree == 0) {
-                return Modular<modulo>(1);
-            }
-            const auto subpower = this->power(degree / 2);
-            if (degree % 2 == 0) {
-                return subpower * subpower;
-            } else {
-                return subpower * subpower * *this;
-            }
-        }
-
         Modular inverse() const {
             assert(((void)"division by zero", value_ != 0));
-            return this->power(modulo - 2);
+            uint32_t degree = modulo - 2;
+            Modular result = 1u;
+            Modular current_power = *this;
+            for (uint32_t current_degree = 1u; current_degree <= degree; current_degree <<= 1u) {
+                if (degree & current_degree) {
+                    result *= current_power;
+                }
+                current_power *= current_power;
+            }
+            return result;
         }
 
         ModularValueType value_;
