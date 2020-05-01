@@ -10,13 +10,14 @@ namespace polynomial {
 
     using MonomialDegreeType = uint32_t;
 
-    template<MonomialDegreeType size>
     class Monomial {
     public:
-        Monomial() : degree_(size, 0) {
-        }
+        Monomial() = default;
 
-        Monomial(std::vector<MonomialDegreeType> degree) : degree_(degree) {
+        Monomial(std::vector<MonomialDegreeType> degree) : degree_(std::move(degree)) {
+            while (!degree_.empty() && degree_.back() == 0) {
+                degree_.pop_back();
+            }
         }
 
         friend bool operator==(const Monomial& first, const Monomial& second) {
@@ -32,39 +33,57 @@ namespace polynomial {
         }
 
         friend Monomial operator*(const Monomial& first, const Monomial& second) {
-            std::vector<MonomialDegreeType> result(size, 0);
-            for (MonomialDegreeType i = 0; i < size; ++i) {
-                result[i] = first.degree_[i] + second.degree_[i];
+            std::vector<MonomialDegreeType> result(std::max(first.size(), second.size()), 0);
+            for (size_t i = 0; i < first.size(); ++i) {
+                result[i] = first.degree_[i];
+            }
+            for (size_t i = 0; i < second.size(); ++i) {
+                result[i] += second.degree_[i];
             }
             return result;
         }
 
         Monomial operator*=(const Monomial& other) {
-            for (MonomialDegreeType i = 0; i < size; ++i) {
+            if (size() < other.size()) {
+                degree_.resize(other.size(), 0);
+            }
+            for (size_t i = 0; i < other.size(); ++i) {
                 degree_[i] += other.degree_[i];
             }
             return *this;
         }
 
         friend Monomial operator/(const Monomial& first, const Monomial& second) {
-            std::vector<MonomialDegreeType> result(size, 0);
-            for (MonomialDegreeType i = 0; i < size; ++i) {
+            assert(((void)"divider should be a subset of dividend", first.size() >= second.size()));
+            std::vector<MonomialDegreeType> result(first.degree_.begin(), first.degree_.end());
+            for (size_t i = 0; i < second.size(); ++i) {
                 assert(((void)"divider should be a subset of dividend", first.degree_[i] >= second.degree_[i]));
-                result[i] = first.degree_[i] - second.degree_[i];
+                result[i] -= second.degree_[i];
             }
             return result;
         }
 
         Monomial operator/=(const Monomial& other) {
-            for (MonomialDegreeType i = 0; i < size; ++i) {
+            assert(((void)"divider should be a subset of dividend", size() >= other.size()));
+            for (size_t i = 0; i < other.size(); ++i) {
                 assert(((void)"divider should be a subset of dividend", degree_[i] >= other.degree_[i]));
                 degree_[i] -= other.degree_[i];
+            }
+            while (!degree_.empty() && degree_.back() == 0) {
+                degree_.pop_back();
             }
             return *this;
         }
 
+        size_t size() const {
+            return degree_.size();
+        }
+
         bool is_subset(const Monomial& other) const {
-            for (MonomialDegreeType i = 0; i < size; ++i) {
+            if (size() < other.size()) {
+                return false;
+            }
+            for (size_t i = 0; i < other.size(); ++i) {
                 if (degree_[i] < other.degree_[i]) {
                     return false;
                 }
@@ -73,37 +92,29 @@ namespace polynomial {
         }
 
         bool is_empty() const {
-            for (MonomialDegreeType i = 0; i < size; ++i) {
-                if (degree_[i] != 0) {
-                    return false;
-                }
-            }
-            return true;
+            return degree_.empty();
         }
 
-        MonomialDegreeType get_degree(MonomialDegreeType num) const {
-            assert(((void)"degree should be between 0 and size - 1", (size > num && num >= 0)));
+        MonomialDegreeType get_degree(size_t num) const {
+            if (num >= size()) {
+                return 0;
+            }
             return degree_[num];
         }
 
         friend std::ostream& operator<<(std::ostream &out, const Monomial &element) {
-            MonomialDegreeType non_zero_count = 0;
-            for (MonomialDegreeType i = 0; i < size; ++i) {
-                non_zero_count += element.degree_[i] > 0;
-            }
-            if (non_zero_count == 0) {
+            if (element.is_empty()) {
                 out << "1";
-            } else {
-                for (MonomialDegreeType i = 0; i < size; ++i) {
-                    if (element.degree_[i] > 0) {
-                        out << "x_" << i + 1;
-                        if (element.degree_[i] > 1) {
-                            out << "^" << element.degree_[i];
-                        }
-                        non_zero_count--;
-                        if (non_zero_count > 0) {
-                            out << "*";
-                        }
+                return out;
+            }
+            for (size_t i = 0; i < element.size(); ++i) {
+                if (element.degree_[i] > 0) {
+                    out << "x_" << i;
+                    if (element.degree_[i] > 1) {
+                        out << "^" << element.degree_[i];
+                    }
+                    if (i + 1 != element.size()) {
+                        out << "*";
                     }
                 }
             }
@@ -114,13 +125,12 @@ namespace polynomial {
         std::vector<MonomialDegreeType> degree_;
     };
 
-    template<MonomialDegreeType size>
-    Monomial<size> get_intersection(const Monomial<size>& first, const Monomial<size>& second) {
-        std::vector<MonomialDegreeType> degree(size);
-        for (MonomialDegreeType i = 0; i < size; ++i) {
+    Monomial get_intersection(const Monomial& first, const Monomial& second) {
+        std::vector<MonomialDegreeType> degree(std::min(first.size(), second.size()));
+        for (size_t i = 0; i < degree.size(); ++i) {
             degree[i] = std::min(first.get_degree(i), second.get_degree(i));
         }
-        return Monomial<size>(degree);
+        return degree;
     }
 }
 
