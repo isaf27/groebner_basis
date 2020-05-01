@@ -14,7 +14,7 @@ namespace polynomial {
     public:
         Monomial() = default;
 
-        Monomial(std::vector<MonomialDegreeType> degree) : degree_(std::move(degree)) {
+        Monomial(std::vector<MonomialDegreeType>&& degree) : degree_(degree) {
             while (!degree_.empty() && degree_.back() == 0) {
                 degree_.pop_back();
             }
@@ -40,7 +40,7 @@ namespace polynomial {
             for (size_t i = 0; i < second.size(); ++i) {
                 result[i] += second.degree_[i];
             }
-            return result;
+            return std::move(result);
         }
 
         Monomial operator*=(const Monomial& other) {
@@ -60,7 +60,7 @@ namespace polynomial {
                 assert(((void)"divider should be a subset of dividend", first.degree_[i] >= second.degree_[i]));
                 result[i] -= second.degree_[i];
             }
-            return result;
+            return std::move(result);
         }
 
         Monomial operator/=(const Monomial& other) {
@@ -130,7 +130,7 @@ namespace polynomial {
         for (size_t i = 0; i < degree.size(); ++i) {
             degree[i] = std::min(first.get_degree(i), second.get_degree(i));
         }
-        return degree;
+        return std::move(degree);
     }
 }
 
