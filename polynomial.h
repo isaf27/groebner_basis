@@ -142,7 +142,7 @@ namespace polynomial {
                 for (const auto& second_monomial : second.terms_) {
                     const auto multiply = first_monomial.first * second_monomial.first;
                     result[multiply] += first_monomial.second * second_monomial.second;
-                    if (result[multiply] == 0) {
+                    if (result[multiply].is_zero()) {
                         result.erase(multiply);
                     }
                 }
