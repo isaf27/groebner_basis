@@ -167,9 +167,11 @@ namespace polynomial {
             }
         }
 
-        friend std::ostream& operator<<(std::ostream &out, const Polynomial &element) {
-            for (auto monomial_iterator = element.terms_.rbegin(); monomial_iterator != element.terms_.rend(); ++monomial_iterator) {
-                if (monomial_iterator != element.terms_.rbegin()) {
+        friend std::ostream& operator<<(std::ostream &out, const Polynomial &polynomial) {
+            for (auto monomial_iterator = polynomial.terms_.rbegin();
+                 monomial_iterator != polynomial.terms_.rend();
+                 ++monomial_iterator) {
+                if (monomial_iterator != polynomial.terms_.rbegin()) {
                     out << "+";
                 }
                 const auto& monomial = monomial_iterator->first;
