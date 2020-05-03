@@ -155,7 +155,7 @@ namespace polynomial {
             return *this;
         }
 
-        void reduce(Polynomial& polynomial) {
+        void reduce(Polynomial& polynomial) const {
             assert(((void)"the reducing polynomial is a zero polynomial", !is_zero()));
             while (!polynomial.is_zero()) {
                 const auto& major_monomial = polynomial.get_major_monomial();
