@@ -12,7 +12,9 @@ namespace math {
     template <ModularValueType modulo>
     class Modular {
     public:
-        Modular(ModularValueType value = 0) : value_(value) {
+        Modular() = default;
+
+        Modular(ModularValueType value) : value_(value) {
             assert(((void)"value should be less than modulo", value < modulo));
         }
 
@@ -84,10 +86,10 @@ namespace math {
     private:
         Modular inverse() const {
             assert(((void)"division by zero", value_ != 0));
-            uint32_t degree = modulo - 2;
+            ModularValueType degree = modulo - 2;
             Modular result = 1u;
             Modular current_power = *this;
-            for (uint32_t current_degree = 1u; current_degree <= degree; current_degree <<= 1u) {
+            for (ModularValueType current_degree = 1u; current_degree <= degree; current_degree <<= 1u) {
                 if (degree & current_degree) {
                     result *= current_power;
                 }
@@ -96,7 +98,7 @@ namespace math {
             return result;
         }
 
-        ModularValueType value_;
+        ModularValueType value_ = 0;
     };
 }
 
