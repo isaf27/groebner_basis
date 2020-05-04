@@ -33,6 +33,28 @@ namespace polynomial {
             }
         }
 
+        friend bool operator==(Ideal& first, Ideal& second) {
+            first.make_minimal_groebner_basis();
+            second.make_minimal_groebner_basis();
+            return first.polynomials_ == second.polynomials_;
+        }
+
+        friend bool operator!=(Ideal& first, Ideal& second) {
+            return !(first == second);
+        }
+
+        friend Ideal operator+(const Ideal& first, const Ideal& second) {
+            std::vector<Polynomial<Field, Compare>> result(first.polynomials_);
+            result.insert(result.end(), second.polynomials_.begin(), second.polynomials_.end());
+            return std::move(result);
+        }
+
+        Ideal operator+=(const Ideal& other) {
+            type_ = BasisType::Any;
+            polynomials_.insert(polynomials_.end(), other.polynomials_.begin(), other.polynomials_.end());
+            return *this;
+        }
+
         void add(const Polynomial<Field, Compare>& polynomial) {
             type_ = BasisType::Any;
             if (!polynomial.is_zero()) {
@@ -171,6 +193,12 @@ namespace polynomial {
 
         bool is_empty() const {
             return polynomials_.empty();
+        }
+
+        bool contains(Polynomial<Field, Compare> polynomial) {
+            make_groebner_basis();
+            reduce(polynomial);
+            return polynomial.is_zero();
         }
 
     private:
