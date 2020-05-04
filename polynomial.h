@@ -23,12 +23,12 @@ namespace polynomial {
 
         Polynomial(std::map<Monomial, Field, Compare>&& terms) : terms_(terms) {}
 
-        Polynomial(std::initializer_list<std::pair<Monomial, Field>> elements) {
-            for (const auto& element : elements) {
-                if (!element.second.is_zero()) {
-                    terms_[element.first] += element.second;
-                    if (terms_[element.first].is_zero()) {
-                        terms_.erase(element.first);
+        Polynomial(std::initializer_list<std::pair<Monomial, Field>> terms) {
+            for (const auto& term : terms) {
+                if (!term.second.is_zero()) {
+                    terms_[term.first] += term.second;
+                    if (terms_[term.first].is_zero()) {
+                        terms_.erase(term.first);
                     }
                 }
             }
@@ -44,20 +44,20 @@ namespace polynomial {
 
         friend Polynomial operator+(const Polynomial& first, const Polynomial& second) {
             std::map<Monomial, Field, Compare> result(first.terms_);
-            for (const auto& monomial : second.terms_) {
-                result[monomial.first] += monomial.second;
-                if (result[monomial.first].is_zero()) {
-                    result.erase(monomial.first);
+            for (const auto& term : second.terms_) {
+                result[term.first] += term.second;
+                if (result[term.first].is_zero()) {
+                    result.erase(term.first);
                 }
             }
             return std::move(result);
         }
 
         Polynomial operator+=(const Polynomial& other) {
-            for (const auto& monomial : other.terms_) {
-                terms_[monomial.first] += monomial.second;
-                if (terms_[monomial.first].is_zero()) {
-                    terms_.erase(monomial.first);
+            for (const auto& term : other.terms_) {
+                terms_[term.first] += term.second;
+                if (terms_[term.first].is_zero()) {
+                    terms_.erase(term.first);
                 }
             }
             return *this;
@@ -65,20 +65,20 @@ namespace polynomial {
 
         friend Polynomial operator-(const Polynomial& first, const Polynomial& second) {
             std::map<Monomial, Field, Compare> result(first.terms_);
-            for (const auto& monomial : second.terms_) {
-                result[monomial.first] -= monomial.second;
-                if (result[monomial.first].is_zero()) {
-                    result.erase(monomial.first);
+            for (const auto& term : second.terms_) {
+                result[term.first] -= term.second;
+                if (result[term.first].is_zero()) {
+                    result.erase(term.first);
                 }
             }
             return std::move(result);
         }
 
         Polynomial operator-=(const Polynomial& other) {
-            for (const auto& monomial : other.terms_) {
-                terms_[monomial.first] -= monomial.second;
-                if (terms_[monomial.first].is_zero()) {
-                    terms_.erase(monomial.first);
+            for (const auto& term : other.terms_) {
+                terms_[term.first] -= term.second;
+                if (terms_[term.first].is_zero()) {
+                    terms_.erase(term.first);
                 }
             }
             return *this;
@@ -89,8 +89,8 @@ namespace polynomial {
                 return Polynomial<Field, Compare>();
             }
             std::map<Monomial, Field, Compare> result(polynomial.terms_);
-            for (auto& monomial : result) {
-                monomial.second *= coefficient;
+            for (auto& term : result) {
+                term.second *= coefficient;
             }
             return std::move(result);
         }
@@ -99,8 +99,8 @@ namespace polynomial {
             if (coefficient.is_zero()) {
                 terms_.clear();
             } else {
-                for (auto& monomial : terms_) {
-                    monomial.second *= coefficient;
+                for (auto& term : terms_) {
+                    term.second *= coefficient;
                 }
             }
             return *this;
@@ -109,24 +109,24 @@ namespace polynomial {
         friend Polynomial operator/(const Polynomial& polynomial, const Field& coefficient) {
             assert(((void)"divizion by zero", !coefficient.is_zero()));
             std::map<Monomial, Field, Compare> result(polynomial.terms_);
-            for (auto& monomial : result) {
-                monomial.second /= coefficient;
+            for (auto& term : result) {
+                term.second /= coefficient;
             }
             return std::move(result);
         }
 
         Polynomial operator/=(const Field& coefficient) {
             assert(((void)"divizion by zero", !coefficient.is_zero()));
-            for (auto& monomial : terms_) {
-                monomial.second /= coefficient;
+            for (auto& term : terms_) {
+                term.second /= coefficient;
             }
             return *this;
         }
 
         friend Polynomial operator*(const Polynomial& polynomial, const Monomial& monomial) {
             std::map<Monomial, Field, Compare> result;
-            for (const auto& element : polynomial.terms_) {
-                result[element.first * monomial] = element.second;
+            for (const auto& term : polynomial.terms_) {
+                result[term.first * monomial] = term.second;
             }
             return std::move(result);
         }
@@ -138,10 +138,10 @@ namespace polynomial {
 
         friend Polynomial operator*(const Polynomial& first, const Polynomial& second) {
             std::map<Monomial, Field, Compare> result;
-            for (const auto& first_monomial : first.terms_) {
-                for (const auto& second_monomial : second.terms_) {
-                    const auto multiply = first_monomial.first * second_monomial.first;
-                    result[multiply] += first_monomial.second * second_monomial.second;
+            for (const auto& first_term : first.terms_) {
+                for (const auto& second_term : second.terms_) {
+                    const auto multiply = first_term.first * second_term.first;
+                    result[multiply] += first_term.second * second_term.second;
                     if (result[multiply].is_zero()) {
                         result.erase(multiply);
                     }
@@ -158,12 +158,15 @@ namespace polynomial {
         void reduce(Polynomial& polynomial) const {
             assert(((void)"the reducing polynomial is a zero polynomial", !is_zero()));
             while (!polynomial.is_zero()) {
-                const auto& major_monomial = polynomial.get_major_monomial();
+                auto major_monomial = polynomial.get_major_monomial();
                 if (!major_monomial.is_subset(get_major_monomial())) {
                     break;
                 }
                 const auto coefficient = polynomial.get_major_coefficient() / get_major_coefficient();
-                polynomial -= (*this) * (major_monomial / get_major_monomial()) * coefficient;
+                major_monomial /= get_major_monomial();
+                for (const auto& term : terms_) {
+                    polynomial.subtract(term.first * major_monomial, term.second * coefficient);
+                }
             }
         }
 
@@ -205,6 +208,20 @@ namespace polynomial {
         Polynomial get_major_term() const {
             assert(((void)"the polynomial is a zero polynomial", !is_zero()));
             return {*terms_.rbegin()};
+        }
+
+        void add(const Monomial& monomial, const Field& coefficient) {
+            terms_[monomial] += coefficient;
+            if (terms_[monomial].is_zero()) {
+                terms_.erase(monomial);
+            }
+        }
+
+        void subtract(const Monomial& monomial, const Field& coefficient) {
+            terms_[monomial] -= coefficient;
+            if (terms_[monomial].is_zero()) {
+                terms_.erase(monomial);
+            }
         }
 
     private:
