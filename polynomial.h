@@ -2,6 +2,7 @@
 #define GROEBNER_BASIS_POLYNOMIAL_H
 
 #include "monomial.h"
+
 #include <functional>
 #include <map>
 #include <initializer_list>
@@ -123,6 +124,16 @@ namespace polynomial {
             return *this;
         }
 
+        friend Polynomial operator/(const Polynomial& polynomial, const Monomial& monomial) {
+            Polynomial<Field, Compare> result;
+            for (const auto& term : polynomial.terms_) {
+                if (term.first.is_subset(monomial)) {
+                    result.add(term.first / monomial, term.second);
+                }
+            }
+            return result;
+        }
+
         friend Polynomial operator*(const Polynomial& polynomial, const Monomial& monomial) {
             std::map<Monomial, Field, Compare> result;
             for (const auto& term : polynomial.terms_) {
@@ -167,6 +178,18 @@ namespace polynomial {
                 for (const auto& term : terms_) {
                     polynomial.subtract(term.first * major_monomial, term.second * coefficient);
                 }
+            }
+        }
+
+        void full_reduce(Polynomial& polynomial) const {
+            assert(((void)"the reducing polynomial is a zero polynomial", !is_zero()));
+            while (!polynomial.is_zero()) {
+                auto div = polynomial / get_major_monomial();
+                if (div.is_zero()) {
+                    break;
+                }
+                div /= get_major_coefficient();
+                polynomial -= (*this) * div;
             }
         }
 
