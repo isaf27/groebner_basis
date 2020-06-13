@@ -66,7 +66,7 @@ namespace math {
             return *this;
         }
 
-        friend std::ostream& operator<<(std::ostream &out, const Rational &element) {
+        friend std::ostream& operator<<(std::ostream& out, const Rational& element) {
             out << element.value_;
             return out;
         }

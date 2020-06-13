@@ -193,7 +193,7 @@ namespace polynomial {
             }
         }
 
-        friend std::ostream& operator<<(std::ostream &out, const Polynomial &polynomial) {
+        friend std::ostream& operator<<(std::ostream& out, const Polynomial& polynomial) {
             for (auto monomial_iterator = polynomial.terms_.rbegin();
                  monomial_iterator != polynomial.terms_.rend();
                  ++monomial_iterator) {

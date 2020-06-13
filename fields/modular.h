@@ -70,7 +70,7 @@ namespace math {
             return *this;
         }
 
-        friend std::ostream& operator<<(std::ostream &out, const Modular &element) {
+        friend std::ostream& operator<<(std::ostream& out, const Modular& element) {
             out << "[" << element.value_ << " (modulo " << modulo << ")]";
             return out;
         }

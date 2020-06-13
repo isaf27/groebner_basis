@@ -177,7 +177,7 @@ namespace polynomial {
             );
         }
 
-        friend std::ostream& operator<<(std::ostream &out, const Ideal &ideal) {
+        friend std::ostream& operator<<(std::ostream& out, const Ideal& ideal) {
             out << "{";
             bool is_comma_needed = false;
             for (const auto& polynomial : ideal.polynomials_) {

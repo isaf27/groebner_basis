@@ -102,7 +102,7 @@ namespace polynomial {
             return degree_[num];
         }
 
-        friend std::ostream& operator<<(std::ostream &out, const Monomial &element) {
+        friend std::ostream& operator<<(std::ostream& out, const Monomial& element) {
             if (element.is_empty()) {
                 out << "1";
                 return out;
