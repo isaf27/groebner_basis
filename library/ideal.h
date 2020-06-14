@@ -212,7 +212,7 @@ namespace polynomial {
                 if (polynomial.is_constant()) {
                     return true;
                 }
-                Monomial monomial = polynomial.get_major_monomial();
+                const Monomial& monomial = polynomial.get_major_monomial();
                 size_t id = 0;
                 size_t count = 0;
                 for (size_t i = 0; i < monomial.size(); ++i) {
