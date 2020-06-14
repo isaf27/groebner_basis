@@ -3,6 +3,7 @@
 
 #include "monomial.h"
 
+#include <algorithm>
 #include <functional>
 #include <map>
 #include <initializer_list>
@@ -216,6 +217,24 @@ namespace polynomial {
 
         bool is_zero() const {
             return terms_.empty();
+        }
+
+        bool is_constant() const {
+            if (terms_.empty()) {
+                return true;
+            }
+            if (terms_.size() > 1u) {
+                return false;
+            }
+            return terms_.begin()->first.is_empty();
+        }
+
+        size_t size() const {
+            size_t result = 0;
+            for (const auto& term : terms_) {
+                result = std::max(result, term.first.size());
+            }
+            return result;
         }
 
         Monomial get_major_monomial() const {

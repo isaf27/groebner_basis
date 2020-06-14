@@ -3,9 +3,9 @@
 
 #include "polynomial.h"
 
+#include <algorithm>
 #include <vector>
 #include <initializer_list>
-#include <algorithm>
 
 namespace polynomial {
 
@@ -193,6 +193,52 @@ namespace polynomial {
 
         bool is_empty() const {
             return polynomials_.empty();
+        }
+
+        bool is_full() {
+            make_groebner_basis();
+            for (const auto& polynomial : polynomials_) {
+                if (!polynomial.is_zero() && polynomial.is_constant()) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        bool are_all_powers_exist() {
+            make_groebner_basis();
+            std::vector<bool> exist(size(), false);
+            for (const auto& polynomial : polynomials_) {
+                if (polynomial.is_constant()) {
+                    return true;
+                }
+                Monomial monomial = polynomial.get_major_monomial();
+                size_t id = 0;
+                size_t count = 0;
+                for (size_t i = 0; i < monomial.size(); ++i) {
+                    if (monomial.get_degree(i) > 0) {
+                        id = i;
+                        ++count;
+                    }
+                }
+                if (count == 1) {
+                    exist[id] = true;
+                }
+            }
+            for (size_t i = 0; i < exist.size(); ++i) {
+                if (!exist[i]) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        size_t size() const {
+            size_t result = 0;
+            for (const auto& polynomial : polynomials_) {
+                result = std::max(result, polynomial.size());
+            }
+            return result;
         }
 
         bool contains(Polynomial<Field, Compare> polynomial) {
