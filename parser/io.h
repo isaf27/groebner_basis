@@ -16,4 +16,12 @@ std::istream& operator>>(std::istream& in, parser::PolynomialType& polynomial) {
     return in;
 }
 
+std::istream& operator>>(std::istream& in, parser::MonomialType& monomial) {
+    std::string monomial_str;
+    in >> monomial_str;
+    parser::PolynomialType polynomial = parser::parse_term(monomial_str);
+    monomial = polynomial.get_major_monomial();
+    return in;
+}
+
 #endif
