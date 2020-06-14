@@ -7,7 +7,7 @@
 #include <string>
 
 template<class T, class U>
-void AssertEqual(const T& t, const U& u, const std::string& hint = "") {
+void assert_equal(const T& t, const U& u, const std::string& hint = "") {
     if (t != u) {
         std::ostringstream os;
         os << "Assertion failed: " << t << " != " << u << " hint: " << hint;
@@ -15,7 +15,7 @@ void AssertEqual(const T& t, const U& u, const std::string& hint = "") {
     }
 }
 
-void Assert(bool b, const std::string& hint = "") {
+void make_assert(bool b, const std::string& hint = "") {
     if (!b) {
         std::ostringstream os;
         os << "Assertion failed, the statement is false, hint: " << hint;
@@ -26,7 +26,7 @@ void Assert(bool b, const std::string& hint = "") {
 class TestRunner {
 public:
     template <class TestFunc>
-    void RunTest(TestFunc func, const std::string& test_name) {
+    void run_test(TestFunc func, const std::string& test_name) {
         ++all_count_;
         try {
             func();
