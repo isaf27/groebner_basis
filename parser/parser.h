@@ -1,5 +1,5 @@
 /*
- * boost library should be installed to use this class
+ * boost library should be installed to use this functions
  */
 
 #ifndef GROEBNER_BASIS_PARSER_H
