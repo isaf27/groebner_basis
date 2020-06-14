@@ -1,3 +1,7 @@
+/*
+ * boost library should be installed to use this class
+ */
+
 #ifndef GROEBNER_BASIS_ALGO_H
 #define GROEBNER_BASIS_ALGO_H
 
