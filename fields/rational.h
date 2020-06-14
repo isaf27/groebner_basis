@@ -67,7 +67,11 @@ namespace math {
         }
 
         friend std::ostream& operator<<(std::ostream& out, const Rational& element) {
-            out << element.value_;
+            if (element.value_ < 0) {
+                out << "(" << element.value_ << ")";
+            } else {
+                out << element.value_;
+            }
             return out;
         }
 
