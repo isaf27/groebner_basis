@@ -4,8 +4,6 @@
 #include "../fields/rational.h"
 #include "../library/ideal.h"
 
-#include <vector>
-
 namespace algo {
 
     using RationalType = math::Rational;
