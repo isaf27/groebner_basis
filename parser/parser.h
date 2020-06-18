@@ -122,6 +122,10 @@ namespace parser {
         return result;
     }
 
+    MonomialType parse_monomial(const std::string& s) {
+        return parse_monomial(s, 0, s.size());
+    }
+
     PolynomialType parse_polynomial(const std::string& s) {
         return parse_polynomial(s, 0, s.size());
     }
