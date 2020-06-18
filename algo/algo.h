@@ -43,8 +43,7 @@ namespace algo {
         size_t size = ideal.size();
         std::vector<polynomial::MonomialDegreeType> degree(size + 1, 0);
         degree[size] = 1;
-        PolynomialType one;
-        one.add({}, 1);
+        PolynomialType one({}, 1);
         ideal.add(one - polynomial * polynomial::Monomial(std::move(degree)));
         return ideal.is_full();
     }

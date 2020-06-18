@@ -74,19 +74,14 @@ namespace parser {
     PolynomialType parse_atom(const std::string& s, size_t l, size_t r) {
         for (size_t i = l; i < r; ++i) {
             if (s[i] == 'x') {
-                PolynomialType result;
-                result.add(parse_monomial(s, i, r), 1);
-                return result;
+                return PolynomialType(parse_monomial(s, i, r), 1);
             }
         }
-        PolynomialType result;
-        result.add({}, parse_coefficient(s, l, r));
-        return result;
+        return PolynomialType({}, parse_coefficient(s, l, r));
     }
 
     PolynomialType parse_term(const std::string& s, size_t l, size_t r) {
-        PolynomialType result;
-        result.add({}, 1);
+        PolynomialType result({}, 1);
         size_t from = l;
         for (size_t i = l; i < r; ++i) {
             if (s[i] == '*') {
