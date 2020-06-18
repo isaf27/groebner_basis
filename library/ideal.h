@@ -191,6 +191,10 @@ namespace polynomial {
             return out;
         }
 
+        std::vector<Polynomial<Field, Compare>> get_basis() {
+            return polynomials_;
+        }
+
         bool is_empty() const {
             return polynomials_.empty();
         }
