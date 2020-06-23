@@ -53,9 +53,11 @@ namespace algo {
         for (const auto& polynomial : subset) {
             ideal.add(polynomial);
         }
-        for (const auto& polynomial : superset)
-            if (!radical_contains(polynomial, ideal))
+        for (const auto& polynomial : superset) {
+            if (!radical_contains(polynomial, ideal)) {
                 return false;
+            }
+        }
         return true;
     }
 
